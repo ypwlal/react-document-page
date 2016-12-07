@@ -4,13 +4,10 @@ import 'antd/lib/style/index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button } from 'antd';
+import Layout from './containers/Layout';
 
 ReactDOM.render(
-  <div>
-    <Button type="primary">Primary</Button>
-    <Button>Default</Button>
-    <Button type="ghost">Ghost</Button>
-    <Button type="dashed">Dashed</Button>
-  </div>
+	<div>
+		<Layout />
+	</div>
 , document.getElementById('app'));

@@ -1,9 +1,4 @@
-import Markdown from 'markdown';
-
-const markdown = Markdown.markdown;
-
-const text =`
-	---
+---
 order: 0
 title:
   zh-CN: 按钮类型
@@ -26,7 +21,9 @@ There are primary button, default button, ghost button and dashed button in antd
 
 Primary button and default button can be used without other button, but ghost button must be used with primary button.
 
-````jsx
+## code
+
+```jsx
 import { Button } from 'antd';
 
 ReactDOM.render(
@@ -36,6 +33,11 @@ ReactDOM.render(
     <Button type="ghost">Ghost</Button>
     <Button type="dashed">Dashed</Button>
   </div>
-, mountNode);
-````
-`
+, document.getElementById('app'));
+```
+
+```html
+
+<div id="app"></div>
+
+```
