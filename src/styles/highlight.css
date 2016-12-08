@@ -1,0 +1,20 @@
+.hljs-keyword {
+	color: #07a;
+}
+
+.hljs-string {
+	color: #07a;
+}
+
+.hljs-literal {
+	color: #690;
+}
+
+.xml .hljs-tag .hljs-name {
+	color: #bb0606;
+}
+
+.xml .hljs-tag .hljs-attr {
+	color: #690;
+}
+

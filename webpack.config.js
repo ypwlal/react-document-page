@@ -35,7 +35,12 @@ var config = {
       {
         test: /\.css$/,
         loader: 'style!css?sourceMap=true&modules&localIdentName=[name]__[local]-[hash:base64:5]',
-        exclude: EXCLUDE_PATH
+        exclude: [EXCLUDE_PATH, path.join(__dirname, './src/styles')]
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css?sourceMap=true',
+        include: path.join(__dirname, './src/styles')
       },
       {
         test: /\.less$/,

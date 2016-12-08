@@ -4,9 +4,11 @@ import CSSModules from 'react-css-modules';
 import Marked from 'marked';
 import toReactComponent from 'jsonml-to-react-component';
 
+import hls from 'highlight.js';
 import { Icon, Card, Row, Col } from 'antd';
 
 import styles from './index.css';
+
 
 //code template
 function getCodeTemplate(code) {
@@ -19,6 +21,15 @@ ${code}
 return str;
 }
 
+
+
+Marked.setOptions({
+	highlight: (code) => {
+		return hls.highlight('jsx', code).value;
+	}
+})
+
+
 @CSSModules(styles, {errorWhenNotFound: false})
 
 class DemoCard extends React.Component {
@@ -29,10 +40,11 @@ class DemoCard extends React.Component {
 		}
 	}
 
+
+
 	handleSwitch = (e) => {
 		e.preventDefault();
 		this.setState(Object.assign({}, this.state, { showCode: !this.state.showCode }));
-
 	}
 
 	render() {

@@ -5,6 +5,7 @@ import Config from '../../dist/a/config';
 
 import DemoCard from './Card';
 
+
 const demo = Object.keys(DemoList);
 
 let componentList = [];
@@ -26,8 +27,8 @@ class Layout extends Component {
 					{ componentList && componentList.map( (component, i) => {
 						if(typeof(component) == 'function') {
 							return (
-								<Col span={12}> 
-									<DemoCard key={demo[i]}
+								<Col span={12} key={demo[i]}> 
+									<DemoCard 
 										 	  demo={React.createElement(component)}
 										 	  title={Config[i].meta.title}
 										 	  descr={Config[i].descr}
