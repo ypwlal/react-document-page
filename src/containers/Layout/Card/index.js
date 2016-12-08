@@ -1,7 +1,12 @@
 import React from 'react';
-import {Card} from 'antd';
-import Marked from 'marked';
+import CSSModules from 'react-css-modules';
 
+import Marked from 'marked';
+import toReactComponent from 'jsonml-to-react-component';
+
+import { Icon, Card, Row, Col } from 'antd';
+
+import styles from './index.css';
 
 //code template
 function getCodeTemplate(code) {
@@ -14,25 +19,44 @@ ${code}
 return str;
 }
 
+@CSSModules(styles, {errorWhenNotFound: false})
+
 class DemoCard extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			showCode: false
+		}
+	}
+
+	handleSwitch = (e) => {
+		e.preventDefault();
+		this.setState(Object.assign({}, this.state, { showCode: !this.state.showCode }));
+
 	}
 
 	render() {
-		const { demo, title, descr, code } = this.props;
+		const { demo, title, descr, code, article } = this.props;
 		return (
-			<Card style={{ width: 300 }}>
-				<div>
+			<Card styleName="demo-card">
+				<div styleName="demo">
 					{demo}
 				</div>
-				<div>
-					{title}
+				<div styleName="meta">
+					<div styleName="title">
+						{title}
+					</div>
+					<div styleName="descr-container">
+						<div styleName="descr">
+							{toReactComponent(['article'].concat(descr))}
+						</div>
+						{ this.state.showCode ? 
+							<Icon type="up-circle-o" styleName="switch-icon" onClick={this.handleSwitch}/> :
+							<Icon type="down-circle-o" styleName="switch-icon" onClick={this.handleSwitch}/>
+						}
+					</div>
 				</div>
-				<div>
-					{descr}
-				</div>
-				<div dangerouslySetInnerHTML={{__html: Marked(getCodeTemplate(code))}} />
+				{ this.state.showCode && <div styleName="code" dangerouslySetInnerHTML={{__html: Marked(getCodeTemplate(code))}} />}
 			</Card>
 		)
 	}
@@ -43,7 +67,8 @@ DemoCard.propsType = {
 	demo: React.PropTypes.element.isRequired,
 	title: React.PropTypes.string.isRequired,
 	descr: React.PropTypes.string.isRequired,
-	code: React.PropTypes.string.isRequired
+	code: React.PropTypes.string.isRequired,
+	article: React.PropTypes.any
 }
 
 

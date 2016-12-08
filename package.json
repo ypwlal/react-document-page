@@ -9,6 +9,7 @@
     "mark-twain": "^1.1.5",
     "marked": "^0.3.6",
     "react": "^15.4.1",
+    "react-css-modules": "^4.1.0",
     "react-dom": "^15.4.1"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "body-parser": "^1.15.2",
     "css-loader": "^0.26.0",
     "express": "^4.14.0",
+    "jsonml-to-react-component": "^0.2.6",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "style-loader": "^0.13.1",

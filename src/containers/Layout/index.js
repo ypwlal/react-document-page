@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Row, Col } from 'antd';
 import DemoList from '../../dist/a';
 import Config from '../../dist/a/config';
 
@@ -21,14 +22,21 @@ class Layout extends Component {
 	render() {
 		return (
 			<div>
-				{ componentList && componentList.map( (component, i) => {
-					if(typeof(component) == 'function') {
-						return <DemoCard demo={React.createElement(component, {key: demo[i]})}
-										 title={Config[i].title}
-										 descr={Config[i].descr}
-										 code={Config[i].code}/>
-					}
-				})}
+				<Row>
+					{ componentList && componentList.map( (component, i) => {
+						if(typeof(component) == 'function') {
+							return (
+								<Col span={12}> 
+									<DemoCard key={demo[i]}
+										 	  demo={React.createElement(component)}
+										 	  title={Config[i].meta.title}
+										 	  descr={Config[i].descr}
+										 	  code={Config[i].code}/>
+								</Col>
+							)
+						}
+					})}
+				</Row>
 			</div>
 		)
 	}

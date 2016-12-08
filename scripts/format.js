@@ -7,6 +7,7 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const babel = require("babel-core");
 const createTemplate = require('./template.js');
+const mdUtil = require('./markdown.js');
 
 const ComponentPath = path.join(__dirname, '../src/components/');
 const OUTPUT = path.join(__dirname, '../src/dist/');
@@ -14,7 +15,6 @@ const OUTPUT = path.join(__dirname, '../src/dist/');
 
 //execution context
 var sandbox = new vm.createContext({ React });
-
 
 
 //统计md文件数量
@@ -48,6 +48,7 @@ function normalizeMd(componentName, mdName, callback) {
 
 			const mdJson = mt(data.toString());
 			const content = mdJson.content;
+			const descr = mdUtil.getDescr(content);
 
 			//code
 			const codeIndex = content.findIndex( item => {
@@ -69,8 +70,10 @@ function normalizeMd(componentName, mdName, callback) {
 
 			var data = {
 				fileName: mdName.split('.')[0],
+				meta: mdJson.meta,
 				title: '',
-				descr: '',
+				descr: descr,
+				content: content,
 				code: content[codeIndex] ? content[codeIndex][2][1] : null,
 				html: content[htmlIndex] ? content[htmlIndex][2][1] : null,
 				css: content[styleIndex] ? content[styleIndex][2][1] : null,

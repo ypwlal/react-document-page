@@ -34,7 +34,7 @@ var config = {
       },
       {
         test: /\.css$/,
-        loader: 'style!css?sourceMap=true',
+        loader: 'style!css?sourceMap=true&modules&localIdentName=[name]__[local]-[hash:base64:5]',
         exclude: EXCLUDE_PATH
       },
       {
