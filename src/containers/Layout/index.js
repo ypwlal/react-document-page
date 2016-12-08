@@ -1,43 +1,42 @@
 import React, { Component, PropTypes } from 'react';
+import CSSModules from 'react-css-modules';
 import { Row, Col } from 'antd';
-import DemoList from '../../dist/a';
-import Config from '../../dist/a/config';
+import Config from '../../dist/config';
 
-import DemoCard from './Card';
+import DemoPage from './DemoPage';
 
+import styles from './index.css';
 
-const demo = Object.keys(DemoList);
+const componentList = Object.keys(Config);
 
-let componentList = [];
+console.log(Config)
+console.log(componentList)
+console.log(Config[componentList[0]])
 
-demo.map( item => {
-	componentList.push(DemoList[item]);
-})
-
-
+@CSSModules(styles, {errorWhenNotFound: false})
 class Layout extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			current: 0
+		}
 	}
 
 	render() {
 		return (
 			<div>
-				<Row>
-					{ componentList && componentList.map( (component, i) => {
-						if(typeof(component) == 'function') {
-							return (
-								<Col span={12} key={demo[i]}> 
-									<DemoCard 
-										 	  demo={React.createElement(component)}
-										 	  title={Config[i].meta.title}
-										 	  descr={Config[i].descr}
-										 	  code={Config[i].code}/>
-								</Col>
-							)
+				<Col span={4}>
+					<div styleName="nav-container">
+						{
+							componentList.map( item => {
+								return item;
+							})
 						}
-					})}
-				</Row>
+					</div>
+				</Col>
+				<Col span={20}>
+					<DemoPage componentName={componentList[this.state.current]} demoList={Config[componentList[this.state.current]]}/>
+				</Col>
 			</div>
 		)
 	}

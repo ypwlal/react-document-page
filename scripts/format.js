@@ -203,10 +203,12 @@ function build(componentName) {
 		(res, cb) => {
 			console.log('5')
 			console.log(mdDataList)
-			var IndexPath = OUTPUT + componentName + '/config.js';
+			var IndexPath = OUTPUT + '/config.js';
 
 			var objStr = `
-const config = ${JSON.stringify(mdDataList)};
+const config = {
+	${componentName}: ${JSON.stringify(mdDataList)}
+};
 export default config;
 			`;
 

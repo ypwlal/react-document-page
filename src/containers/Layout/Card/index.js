@@ -40,7 +40,9 @@ class DemoCard extends React.Component {
 		}
 	}
 
-
+	componentDidMount() {
+		hls.initHighlighting();
+	}
 
 	handleSwitch = (e) => {
 		e.preventDefault();
