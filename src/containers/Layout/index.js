@@ -1,6 +1,8 @@
-import React, { Component, PropType } from 'react';
+import React, { Component, PropTypes } from 'react';
 import DemoList from '../../dist/a';
 import Config from '../../dist/a/config';
+
+import DemoCard from './Card';
 
 const demo = Object.keys(DemoList);
 
@@ -21,7 +23,10 @@ class Layout extends Component {
 			<div>
 				{ componentList && componentList.map( (component, i) => {
 					if(typeof(component) == 'function') {
-						return React.createElement(component, {key: demo[i]})
+						return <DemoCard demo={React.createElement(component, {key: demo[i]})}
+										 title={Config[i].title}
+										 descr={Config[i].descr}
+										 code={Config[i].code}/>
 					}
 				})}
 			</div>

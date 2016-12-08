@@ -16,6 +16,7 @@ const OUTPUT = path.join(__dirname, '../src/dist/');
 var sandbox = new vm.createContext({ React });
 
 
+
 //统计md文件数量
 function staticMd(componentName, cb) {
 	var dirPath = ComponentPath + componentName + '/demo/';

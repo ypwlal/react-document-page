@@ -35,6 +35,7 @@
   },
   "scripts": {
     "start": "set NODE_ENV=development&&nodemon ./server.js",
+    "build": "node ./scripts/format.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
