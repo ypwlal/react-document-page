@@ -133,6 +133,10 @@ function turnComponent(componentName, data, callback) {
 
 		var componentString = data.code.slice(0 , data.code.indexOf('ReactDOM.render'));
 
+		if (!fs.existsSync(OUTPUT + componentName)) {
+           fs.mkdirSync(OUTPUT + componentName);
+        }
+
 		fs.writeFile(outPath, createTemplate.createDemoTemplate(componentString), {flag: 'w+', encoding: 'utf-8', mode: 0666}, (err) => {
 			if (err) throw err;
 			return callback(null, outPath);
