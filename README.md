@@ -2,12 +2,6 @@
 
 To create react component demo and doc.
 
-## Installation
-
-```bash
-npm install --save jsonml-to-react-component
-```
-
 ## Usage
 
 ```bash
