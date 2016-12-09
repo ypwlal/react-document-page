@@ -9,7 +9,6 @@ import { Icon, Card, Row, Col } from 'antd';
 
 import styles from './index.css';
 
-
 //code template
 function getCodeTemplate(code) {
 	var str = '';
@@ -20,7 +19,6 @@ ${code}
 `
 return str;
 }
-
 
 
 Marked.setOptions({
@@ -51,6 +49,7 @@ class DemoCard extends React.Component {
 
 	render() {
 		const { demo, title, descr, code, article } = this.props;
+
 		return (
 			<Card styleName="demo-card">
 				<div styleName="demo">
@@ -80,7 +79,7 @@ class DemoCard extends React.Component {
 DemoCard.propsType = {
 	demo: React.PropTypes.element.isRequired,
 	title: React.PropTypes.string.isRequired,
-	descr: React.PropTypes.string.isRequired,
+	descr: React.PropTypes.array.isRequired,
 	code: React.PropTypes.string.isRequired,
 	article: React.PropTypes.any
 }

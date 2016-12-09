@@ -7,7 +7,6 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const babel = require("babel-core");
 const createTemplate = require('./template.js');
-const mdUtil = require('./markdown.js');
 
 const ComponentPath = path.join(__dirname, '../src/components/');
 const OUTPUT = path.join(__dirname, '../src/dist/');
@@ -16,16 +15,33 @@ const OUTPUT = path.join(__dirname, '../src/dist/');
 //execution context
 var sandbox = new vm.createContext({ React });
 
+//统计component数量
+function countComponent(callback) {
+	var dirPath = ComponentPath;
+	var componentList = [];
+
+	var files = fs.readdirSync(dirPath);
+
+	files.map( (file, i) => {
+		var state = fs.statSync(dirPath + file);
+		if (state.isDirectory() && fs.readdirSync(dirPath + file).find( (item) => item == 'index.md')) {
+			componentList.push(files[i]);
+		}
+	})
+	console.log(componentList)
+	return callback && callback(componentList);
+}	
+
 
 //统计md文件数量
-function staticMd(componentName, cb) {
+function countMd(componentName, cb) {
 	var dirPath = ComponentPath + componentName + '/demo/';
 	var mdList = [];
 
-	var files = fs.readdir(dirPath, (err, files) => {
+	fs.readdir(dirPath, (err, files) => {
 		if (err) {
 			console.log(err)
-			return cb();
+			return cb(err, null);
 		}
 
 		files.forEach( (file) => {
@@ -33,11 +49,32 @@ function staticMd(componentName, cb) {
 				mdList.push(file);
 			}
 		})
-		return cb && cb(mdList)
+		return cb && cb(null, mdList)
+	})
+}
+//normalize index.md
+function normalizeIndexMd(componentName, callback) {
+	fs.readFile(ComponentPath + componentName + '/index.md', (err, data) => {
+		if (err) {
+			console.log(err);
+			throw err;
+		}
+
+		const mdJson = mt(data.toString());
+		const content = mdJson.content;
+
+		var data = {
+			meta: mdJson.meta,
+			content: content
+		}
+
+		return callback && callback(null, data);
+
 	})
 }
 
-//normalize md
+
+//normalize demo/*.md
 function normalizeMd(componentName, mdName, callback) {
 	return (mdName, callback) => {
 		fs.readFile(ComponentPath + componentName + '/demo/' + mdName, function(err, data) {
@@ -48,7 +85,6 @@ function normalizeMd(componentName, mdName, callback) {
 
 			const mdJson = mt(data.toString());
 			const content = mdJson.content;
-			const descr = mdUtil.getDescr(content);
 
 			//code
 			const codeIndex = content.findIndex( item => {
@@ -72,7 +108,6 @@ function normalizeMd(componentName, mdName, callback) {
 				fileName: mdName.split('.')[0],
 				meta: mdJson.meta,
 				title: '',
-				descr: descr,
 				content: content,
 				code: content[codeIndex] ? content[codeIndex][2][1] : null,
 				html: content[htmlIndex] ? content[htmlIndex][2][1] : null,
@@ -130,43 +165,82 @@ function getViewString(path, callback) {
 
 //build
 function build(componentName) {
+	var componentList = [];
+	var config = {};
 	var mdDataList = [];
 	var mdList = [];
+	var indexMd = null;
 
-	async.waterfall([
-		//统计md数量
+	async.series([
+		//统计component数量
+		(cb) => {
+			console.log('0')
+			countComponent( (list) => {
+				componentList = list;
+				cb(null, '0')
+			})
+		},
+		//normalize index.md
 		(cb) => {
 			console.log('1')
-			staticMd(componentName, (list) => {
-				mdList = list;
-				cb(null, list);
+			console.log(componentList)
+			async.map(componentList, normalizeIndexMd, (err, res) => {
+				console.log(res)
+				componentList.map( (item, i) => {
+					config[item] = {};
+					config[item].index = res[i];
+				})
+				console.log(config)
+				cb(null, '1');
+			})
+		},
+		//统计md数量
+		(cb) => {
+			console.log('2')
+			async.map(componentList, countMd, (err, res) => {
+				console.log(res)
+				componentList.map( (item, i) => {
+					config[item].list = res[i];
+				})
+				console.log(config)
+				cb(null, '2');
 			})
 		},
 		//获取md数据
-		(list, cb) => {
-			console.log('2')
-			console.log(list)
-			async.map(list, normalizeMd(componentName), (err, res) => {
+		(cb) => {
+			console.log('3')
+			var components = Object.keys(config);
+
+			async.map(components, (name, callback) => {
+				async.map(config[name].list, normalizeMd(name), (err, res) => {
+					config[name].demo = res;
+					callback(null, res)
+				})
+			}, (err, res) => {
 				if (err) {
 					console.log(err);
 					return err;
 				}
-				mdDataList = res;
-				cb(null, res);
+				console.log(config)
+				cb(null, '3');
 			})
 		},
 		//code转成component
-		(res, cb) => {
-			console.log('3')
-			console.log(res)
-
-			async.map(mdDataList, turnComponent(componentName), (err, res) => {
-				if (err) {
-					console.log(err);
-					return err;
-				}
-				cb(null, res);
+		(cb) => {
+			console.log('4')
+			var components = Object.keys(config);
+			async.map(components, (name, callback) => {
+				async.map(config[name].demo, turnComponent(name), (err, res) => {
+					if (err) {
+						console.log(err);
+						return err;
+					}
+					callback(null, res);
+				})
+			}, (err, res) => {
+				cb(null, '4')
 			})
+			
 		},
 
 		//renderToComponentString
@@ -187,30 +261,30 @@ function build(componentName) {
 			})
 		},*/
 
-		//write layout
-		(res, cb) => {
-			console.log('4');
-			var IndexPath = OUTPUT + componentName + '/index.js';
-			fs.writeFile(IndexPath, createTemplate.createIndexTemplate(componentName, mdDataList), {flag: 'w+', encoding: 'utf-8', mode: 0666}, 
-				(err) => {
-					if (err) throw err;
-					return cb(null, null);
-				}
-			)
-
+		//write /index.js
+		(cb) => {
+			console.log('5');
+			var components = Object.keys(config);
+			async.map(components, (name, callback) => {
+				var IndexPath = OUTPUT + name + '/index.js';
+				fs.writeFile(IndexPath, createTemplate.createIndexTemplate(name, config[name].demo), {flag: 'w+', encoding: 'utf-8', mode: 0666}, 
+					(err) => {
+						if (err) throw err;
+					}
+				)
+				callback(null, null)
+			}, (err, res) => {
+				console.log(res)
+				cb(null, '5');
+			})
 		},
 		//write config
-		(res, cb) => {
-			console.log('5')
-			console.log(mdDataList)
+		(cb) => {
+			console.log('6')
+
 			var IndexPath = OUTPUT + '/config.js';
 
-			var objStr = `
-const config = {
-	${componentName}: ${JSON.stringify(mdDataList)}
-};
-export default config;
-			`;
+			var objStr = createTemplate.createConfigTemplate(JSON.stringify(config));
 
 			fs.writeFile(IndexPath, objStr, {flag: 'w+', encoding: 'utf-8', mode: 0666}, (err) => {
 				if (err) throw err;
@@ -228,4 +302,5 @@ export default config;
 /*
  * 接收参数创建component模板
  */
-build(process.argv[2]);
+//build(process.argv[2]);
+build()

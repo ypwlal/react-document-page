@@ -49,7 +49,25 @@ export default {
 return template;
 }
 
+/**
+ * @param(componentName): componentName [string]
+ * @param(indexData): component descr str [string]
+ * @param(demoData): demo data [string]
+ * @return string
+ **/
+function createConfigTemplate(config) {
+	var configStr = `
+	const config = ${config};
+
+	export default config;
+	`;
+
+	return configStr;
+};
+
+
 module.exports = {
 	createDemoTemplate,
-	createIndexTemplate
+	createIndexTemplate,
+	createConfigTemplate
 }

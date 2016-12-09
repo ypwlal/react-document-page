@@ -25,6 +25,23 @@ function getDescr(content) {
 	return content.slice(startIndex, endIndex);
 }
 
+
+function splitDescr(content) {
+	if (!(content instanceof Array)) {
+		return [];
+	}
+
+	var startIndex = content.length;
+	content.map( (item, i) => {
+		if (item[0] == 'h2' && item[1] && item[1] == 'API') {
+			startIndex = i;
+		}
+	})
+
+	return [content.slice(1, startIndex), content.slice(startIndex, content.length)];
+}
+
 module.exports = {
-	getDescr
+	getDescr,
+	splitDescr
 }
