@@ -1,0 +1,62 @@
+.demoPage h2 {
+	font-size: 22px;
+	color: #404040;
+	font-weight: 500;
+    line-height: 40px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.title {
+	font-size: 28px;
+	color: #404040;
+	font-weight: 500;
+    line-height: 40px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.title span:first-child {
+	margin-right: 20px;
+}
+
+.descr {
+	margin-bottom: 20px;
+}
+
+.api {
+	margin-top: 20px ;
+	color: #666;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.api table {
+	font-size: 13px;
+	border: 1px solid #e9e9e9;
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    margin: 16px 0;
+    width: 100%;
+    color: #666;
+}
+
+.api table td:first-child {
+    background: #fcfcfc none repeat scroll 0 0;
+    font-weight: 500;
+    width: 20%;
+}
+.api table th, 
+.api table td {
+    border: 1px solid #e9e9e9;
+    padding: 8px 16px;
+    text-align: left;
+}
+
+.api code {
+	background: #f7f7f7 none repeat scroll 0 0;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    font-size: 0.9em;
+    margin: 0 1px;
+    padding: 0.2em 0.4em;
+}

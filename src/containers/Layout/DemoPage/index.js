@@ -7,6 +7,10 @@ import DemoCard from '../Card';
 
 import { getDescr, splitDescr } from '../../../utils/markdown.js';
 
+import styles from './index.css';
+
+@CSSModules(styles, {errorWhenNotFound: false})
+
 class DemoPage extends Component {
 	constructor(props) {
 		super(props);
@@ -24,23 +28,29 @@ class DemoPage extends Component {
 		const DESCR = splitDescr(indexInfo.content);
 
 		return (
-			<div>
-				<div><div>{toReactComponent(['article'].concat(DESCR[0]))}</div></div>
-				{ componentList && componentList.map( (component, i) => {
-					console.log(getDescr(demoList[i].content))
-					if(typeof(component) == 'function') {
-						return (
-							<Col span={12} key={demoList[i].fileName} styleName="col"> 
-								<DemoCard 
-									 	  demo={React.createElement(component)}
-									 	  title={demoList[i].meta.title}
-									 	  descr={getDescr(demoList[i].content)}
-									 	  code={demoList[i].code}/>
-							</Col>
-						)
-					}
-				})}
-				<div>{toReactComponent(['article'].concat(DESCR[1]))}</div>
+			<div styleName="demoPage">
+				<h1 styleName="title">
+					<span>{indexInfo.meta.title}</span>
+					<span>{indexInfo.meta.subtitle}</span>
+				</h1>
+				<div styleName="descr">{toReactComponent(['article'].concat(DESCR[0]))}</div>
+				<Row>
+					{ componentList && componentList.map( (component, i) => {
+						console.log(getDescr(demoList[i].content))
+						if(typeof(component) == 'function') {
+							return (
+								<Col span={12} key={demoList[i].fileName} styleName="col"> 
+									<DemoCard 
+										 	  demo={React.createElement(component)}
+										 	  title={demoList[i].meta.title}
+										 	  descr={getDescr(demoList[i].content)}
+										 	  code={demoList[i].code}/>
+								</Col>
+							)
+						}
+					})}
+				</Row>
+				<div styleName="api">{toReactComponent(['article'].concat(DESCR[1]))}</div>
 			</div>
 		)
 	}
