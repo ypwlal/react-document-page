@@ -31,6 +31,9 @@ class Layout extends Component {
 
 	autoCompleteChange = (value) => {
 		console.log(value)
+		this.setState(Object.assign({}, this.state, {
+			navCurrent: componentList.findIndex( item => item == value)
+		}))
 	}
 
 	handleMenuClick = (e) => {
@@ -62,8 +65,8 @@ class Layout extends Component {
 							className={styles["auto-complete"]}
 	        				dataSource={componentList}
 	       				 	style={{ width: 200 }}
-	       				 	onChange={this.autoCompleteChange}
-	        				placeholder="input here"
+	       				 	onSelect={this.autoCompleteChange}
+	        				placeholder="搜索组件"
 	      				/>
 	      				<Menu className={styles["header-nav"]}
 	      					onClick={this.headerNavClick}
@@ -87,7 +90,7 @@ class Layout extends Component {
 								  defaultOpenKeys={['components']}
 								  mode="inline"
 							>
-								<SubMenu key="components" title={<span>Components</span>}>
+								<SubMenu key="components" title={<h4>Components</h4>}>
 								{
 									componentList.map( (item, i) => {
 										return <Menu.Item key={"nav-" + i}>

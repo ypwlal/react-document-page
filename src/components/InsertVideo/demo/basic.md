@@ -1,6 +1,6 @@
 ---
 order: 0
-title: 显示隐藏
+title: 基本用法
 ---
 
 ## Descr
@@ -15,13 +15,14 @@ title: 显示隐藏
 ## code
 
 ```jsx
-import { Modal, Button } from 'antd';
+import { Button } from 'antd';
+import InsertVideo from '../../components/InsertVideo/src';
 
 const App = React.createClass({
   getInitialState() {
     return { visible: false };
   },
-  showModal() {
+  show() {
     this.setState({
       visible: true,
     });
@@ -41,14 +42,11 @@ const App = React.createClass({
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>Open a modal dialog</Button>
-        <Modal title="Basic Modal" visible={this.state.visible}
-          onOk={this.handleOk} onCancel={this.handleCancel}
-        >
-          <p>some contents...</p>
-          <p>some contents...</p>
-          <p>some contents...</p>
-        </Modal>
+        <Button type="primary" onClick={this.show}>点击弹出播放</Button>
+        <InsertVideo visible={this.state.visible} 
+                     title="测试"
+                     onConfirm={this.handleOk}
+                     onCancel={this.handleCancel}/>
       </div>
     );
   },
